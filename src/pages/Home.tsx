@@ -2,6 +2,8 @@ import React, { useEffect, useState, useMemo } from 'react'
 import type { Entity } from '../types/entities'
 import { listEntities, deleteEntity } from '../api/entities'
 import Header from '../components/Header'
+import Footer from '../components/Footer'
+import Cards from '../components/Cards'
 
 export default function Home() {
   const [entities, setEntities] = useState<Entity[]>([])
@@ -66,25 +68,7 @@ export default function Home() {
   return (
     <div className="min-h-screen p-6 bg-slate-900 text-gray-100">
       <Header />
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-slate-800 rounded-lg p-4 shadow">
-          <div className="text-sm text-gray-400">Total Entities</div>
-          <div className="text-2xl font-bold">{entities.length}</div>
-        </div>
-        <div className="bg-slate-800 rounded-lg p-4 shadow">
-          <div className="text-sm text-gray-400">Test ($)</div>
-          <div className="text-2xl font-bold">0</div>
-        </div>
-        <div className="bg-slate-800 rounded-lg p-4 shadow">
-          <div className="text-sm text-gray-400">Test D0</div>
-          <div className="text-2xl font-bold">0</div>
-        </div>
-        <div className="bg-slate-800 rounded-lg p-4 shadow">
-          <div className="text-sm text-gray-400">Test D-1</div>
-          <div className="text-2xl font-bold">0</div>
-        </div>
-      </section>
-
+      <Cards entities={entities} />
       <main>
         <div className="mb-4">
           {/* Inlined EntityTable */}
@@ -216,6 +200,7 @@ export default function Home() {
         </div>
         {loading && <div className="flex justify-center py-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/30"></div></div>}
       </main>
+      <Footer />
     </div>
   )
 }
