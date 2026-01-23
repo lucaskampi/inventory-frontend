@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import type { Entity } from '../types/entities'
 import { listEntities, deleteEntity } from '../api/entities'
+import Header from '../components/Header'
 
 export default function Home() {
   const [entities, setEntities] = useState<Entity[]>([])
@@ -64,17 +65,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen p-6 bg-slate-900 text-gray-100">
-      <header className="mb-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h1 className="text-xl font-semibold">Home</h1>
-          </div>
-          <div>
-            <button className="text-gray-300 hover:text-white">⚙️</button>
-          </div>
-        </div>
-      </header>
-
+      <Header />
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div className="bg-slate-800 rounded-lg p-4 shadow">
           <div className="text-sm text-gray-400">Total Entities</div>
