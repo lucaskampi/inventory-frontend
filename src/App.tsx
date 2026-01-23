@@ -1,11 +1,11 @@
-import './App.css'
+import './index.css'
+import Home from './pages/Home'
 
 function App() {
-
   return (
-    <>
-    Hello World        
-    </>
+    <div className="min-h-screen">
+      <Home />
+    </div>
   )
 }
 
