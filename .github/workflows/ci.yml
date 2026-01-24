@@ -31,7 +31,7 @@ jobs:
         run: npm run preview --silent &
 
       - name: Wait for server
-        run: npx wait-on http://localhost:5174
+        run: npm run wait:preview
 
       - name: Run Cypress tests (headless)
         run: npx cypress run --spec "cypress/e2e/**/*.cy.ts"

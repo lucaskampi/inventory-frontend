@@ -11,8 +11,8 @@
     "test:ui": "vitest --ui",
     "coverage": "vitest --coverage",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "wait:preview": "wait-on --timeout 120000 http://localhost:5174",
+    "preview": "npx kill-port 5173 || true && vite preview --port 5173 --host",
+    "wait:preview": "wait-on --timeout 120000 http://localhost:5173",
     "ci:e2e": "npm run preview --silent & npm run wait:preview && npx cypress run --headless"
   },
   "dependencies": {
