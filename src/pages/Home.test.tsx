@@ -60,15 +60,18 @@ test('delete flow: confirm true deletes and removes entity; confirm false does n
   ;(deleteEntity as any).mockResolvedValue(undefined)
   render(<Home />)
   expect(await screen.findByText('DelMe')).toBeInTheDocument()
+  const user = userEvent.setup()
 
-  // confirm false -> no delete
-  vi.spyOn(window, 'confirm').mockImplementationOnce(() => false)
-  await userEvent.click(screen.getByTitle('Delete'))
+  // open confirm dialog and cancel -> no delete
+  await user.click(screen.getByTitle('Delete'))
+  expect(await screen.findByTestId('confirm-dialog')).toBeInTheDocument()
+  await user.click(screen.getByText('Cancel'))
   expect(deleteEntity).not.toHaveBeenCalled()
 
-  // confirm true -> delete should be called and UI updated
-  vi.spyOn(window, 'confirm').mockImplementationOnce(() => true)
-  await userEvent.click(screen.getByTitle('Delete'))
+  // open confirm dialog and confirm -> delete should be called and UI updated
+  await user.click(screen.getByTitle('Delete'))
+  expect(await screen.findByTestId('confirm-dialog')).toBeInTheDocument()
+  await user.click(screen.getByRole('button', { name: 'Confirm' }))
   expect(deleteEntity).toHaveBeenCalledWith(3)
   // after deletion, item should be removed
   expect(screen.queryByText('DelMe')).not.toBeInTheDocument()
@@ -148,8 +151,10 @@ test('delete error branch displays error message', async () => {
   ;(deleteEntity as any).mockRejectedValueOnce(new Error('delete-fail'))
   render(<Home />)
   expect(await screen.findByText('ToDelete')).toBeInTheDocument()
-  // confirm true
-  vi.spyOn(window, 'confirm').mockImplementationOnce(() => true)
-  await userEvent.click(screen.getByTitle('Delete'))
+  const user = userEvent.setup()
+  // open confirm dialog and confirm -> triggers delete error
+  await user.click(screen.getByTitle('Delete'))
+  expect(await screen.findByTestId('confirm-dialog')).toBeInTheDocument()
+  await user.click(screen.getByRole('button', { name: 'Confirm' }))
   expect(await screen.findByText(/delete-fail/)).toBeInTheDocument()
 })

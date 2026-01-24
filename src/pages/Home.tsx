@@ -7,6 +7,7 @@ import Cards from '../components/Cards'
 import Table from '../components/Table'
 import AddPopup from '../components/AddPopup'
 import EditPopup from '../components/EditPopup'
+import ConfirmDialog from '../components/ConfirmDialog'
 
 export default function Home() {
   const [entities, setEntities] = useState<Entity[]>([])
@@ -32,19 +33,35 @@ export default function Home() {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm('Delete this entity?')) return
-    try {
-      await deleteEntity(id)
-      setEntities((s) => s.filter((e) => e.id !== id))
-    } catch (err) {
-      console.error(err)
-      setError((err as Error)?.message || 'Failed to delete entity')
-    }
+    // open confirm dialog instead of using window.confirm
+    setToDeleteId(id)
+    setShowConfirm(true)
   }
 
   const [showAdd, setShowAdd] = useState(false)
   const [showEdit, setShowEdit] = useState(false)
   const [editingEntity, setEditingEntity] = useState<Entity | null>(null)
+  const [showConfirm, setShowConfirm] = useState(false)
+  const [toDeleteId, setToDeleteId] = useState<number | null>(null)
+
+  async function confirmDelete() {
+    if (toDeleteId == null) return
+    try {
+      await deleteEntity(toDeleteId)
+      setEntities((s) => s.filter((e) => e.id !== toDeleteId))
+    } catch (err) {
+      console.error(err)
+      setError((err as Error)?.message || 'Failed to delete entity')
+    } finally {
+      setShowConfirm(false)
+      setToDeleteId(null)
+    }
+  }
+
+  function cancelDelete() {
+    setShowConfirm(false)
+    setToDeleteId(null)
+  }
 
   async function handleCreateSuccess(e: Entity) {
     // insert at top
@@ -92,6 +109,7 @@ export default function Home() {
         {editingEntity && (
           <EditPopup isOpen={showEdit} entity={editingEntity} onClose={() => setShowEdit(false)} onSaved={handleSaved} />
         )}
+        <ConfirmDialog isOpen={showConfirm} message="Delete this entity?" onConfirm={confirmDelete} onCancel={cancelDelete} />
         {loading && (
           <div className="flex justify-center py-8" role="status" aria-label="home-loading">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/30" />
