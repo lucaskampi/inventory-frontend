@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { updateEntity } from '../api/entities'
 import type { Entity, EntityUpdatePayload } from '../types/entity'
+import { formatNumberBR, parseBRInput } from '../utils/number'
 
 type Props = {
   isOpen: boolean
@@ -13,15 +14,18 @@ export default function EditPopup({ isOpen, entity, onClose, onSaved }: Props) {
   const [name, setName] = useState(entity?.name ?? '')
   const [typeVal, setTypeVal] = useState(entity?.type ?? '')
   const [description, setDescription] = useState(entity?.description ?? '')
-  const [price, setPrice] = useState(entity?.price != null ? String(entity.price) : '')
+  const [price, setPrice] = useState(entity?.price != null ? formatNumberBR(entity.price) : '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // ensure hooks are called even if closed
+  if (!isOpen) return null
 
   useEffect(() => {
     setName(entity?.name ?? '')
     setTypeVal(entity?.type ?? '')
     setDescription(entity?.description ?? '')
-    setPrice(entity?.price != null ? String(entity.price) : '')
+    setPrice(entity?.price != null ? formatNumberBR(entity.price) : '')
   }, [entity])
 
   // ensure hooks are called even if closed
@@ -34,11 +38,12 @@ export default function EditPopup({ isOpen, entity, onClose, onSaved }: Props) {
       setError('Type is required')
       return
     }
+    const parsed = parseBRInput(price)
     const payload: EntityUpdatePayload = {
       type: typeVal,
       name: name || undefined,
       description: description || undefined,
-      price: price !== '' ? Number(price) : undefined,
+      price: parsed !== undefined ? parsed : undefined
     }
     try {
       setLoading(true)
@@ -70,8 +75,16 @@ export default function EditPopup({ isOpen, entity, onClose, onSaved }: Props) {
             <label className="block text-sm text-gray-300">Price</label>
             <input
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="0.00"
+              onChange={(e) => setPrice(e.target.value.replace(/[^0-9.,]/g, ''))}
+              onBlur={() => {
+                const parsed = parseBRInput(price)
+                setPrice(parsed !== undefined ? formatNumberBR(parsed) : '')
+              }}
+              onFocus={() => {
+                const parsed = parseBRInput(price)
+                setPrice(parsed !== undefined ? String(parsed).replace('.', ',') : '')
+              }}
+              placeholder="0,00"
               inputMode="decimal"
               className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700"
             />
