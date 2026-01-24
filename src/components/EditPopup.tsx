@@ -64,16 +64,17 @@ export default function EditPopup({ isOpen, entity, onClose, onSaved }: Props) {
         {error && <div className="mb-2 p-2 bg-red-800 text-red-100 rounded">{error}</div>}
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="block text-sm text-gray-300">Name</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
+            <label htmlFor="edit-name-input" className="block text-sm text-gray-300">Name</label>
+            <input id="edit-name-input" value={name} onChange={(e) => setName(e.target.value)} className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
           </div>
           <div>
-            <label className="block text-sm text-gray-300">Type *</label>
-            <input value={typeVal} onChange={(e) => setTypeVal(e.target.value)} required className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
+            <label htmlFor="edit-type-input" className="block text-sm text-gray-300">Type *</label>
+            <input id="edit-type-input" value={typeVal} onChange={(e) => setTypeVal(e.target.value)} className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
           </div>
           <div>
-            <label className="block text-sm text-gray-300">Price</label>
+            <label htmlFor="edit-price-input" className="block text-sm text-gray-300">Price</label>
             <input
+              id="edit-price-input"
               value={price}
               onChange={(e) => setPrice(e.target.value.replace(/[^0-9.,]/g, ''))}
               onBlur={() => {
@@ -90,8 +91,8 @@ export default function EditPopup({ isOpen, entity, onClose, onSaved }: Props) {
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-300">Description</label>
-            <input value={description} onChange={(e) => setDescription(e.target.value)} className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
+            <label htmlFor="edit-description-input" className="block text-sm text-gray-300">Description</label>
+            <input id="edit-description-input" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
           </div>
           <div className="flex justify-end gap-2">
             <button type="button" onClick={() => onClose()} className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">Cancel</button>
