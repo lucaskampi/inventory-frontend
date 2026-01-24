@@ -67,6 +67,8 @@ Open http://localhost:5173
 - E2E tests expect the frontend to be served (dev or preview) and intercept requests to the API using wildcard patterns (e.g. `**/entities`) so tests work with proxied APIs or different hostnames.
 - The repository contains a GitHub Actions workflow that runs unit tests, builds the app and runs headless Cypress in CI. The workflow pins the preview server to port `5173` and uses a `wait-on` script to ensure the server is ready.
 
+![Coverage Report](./docs/test-screenshot/frontend-coverage-test-report.png)
+
 ## Price formatting
 
 The UI formats prices using `pt-BR` rules (thousand separator `.` and decimal `,`) for display. Inputs accept numbers with `.` or `,` and are parsed to numeric values before sending to the API.
