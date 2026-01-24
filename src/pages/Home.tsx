@@ -68,6 +68,8 @@ export default function Home() {
     setShowEdit(false)
   }
 
+  // reorder handler removed — cards no longer include Reorder action
+
   // Table behavior moved to `Table` component.
 
   return (

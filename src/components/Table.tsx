@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { formatNumberBR } from '../utils/number'
 import type { Entity } from '../types/entity'
 
 type Props = {
@@ -32,10 +33,10 @@ export default function Table({
 
   function formatPrice(p?: number | null) {
     if (p === null || p === undefined) return '—'
-    if (typeof p === 'number' && Number.isFinite(p)) return p.toFixed(2)
+    if (typeof p === 'number' && Number.isFinite(p)) return formatNumberBR(p)
     if (typeof p === 'string') {
       const n = Number(p)
-      if (!Number.isNaN(n) && Number.isFinite(n)) return n.toFixed(2)
+      if (!Number.isNaN(n) && Number.isFinite(n)) return formatNumberBR(n)
     }
     return '—'
   }
@@ -61,12 +62,21 @@ export default function Table({
     <div className="text-gray-200">
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-lg font-semibold">Entities</h3>
-        <div>
+        <div className="flex items-center">
+          {onAdd && (
+            <button
+              title="Add"
+              onClick={() => onAdd && onAdd()}
+              className="mr-2 px-3 py-1 rounded bg-blue-500 hover:bg-blue-400 text-white"
+            >
+              +
+            </button>
+          )}
           <button
             title="Refresh"
             onClick={() => onRefresh && onRefresh()}
             disabled={loading}
-            className="text-gray-400 hover:text-gray-200 mr-2 px-2 py-1 rounded bg-gray-900 disabled:opacity-50"
+            className="text-gray-400 hover:text-gray-200 ml-2 px-2 py-1 rounded bg-gray-900 disabled:opacity-50"
           >
             ⟳
           </button>
@@ -190,13 +200,7 @@ export default function Table({
         </div>
       </div>
 
-      <button
-        onClick={() => onAdd && onAdd()}
-        aria-label="Add New Item"
-        className="fixed right-5 bottom-5 bg-blue-500 hover:bg-blue-400 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl"
-      >
-        +
-      </button>
+      
     </div>
   )
 }
