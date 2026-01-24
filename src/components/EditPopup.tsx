@@ -13,6 +13,7 @@ export default function EditPopup({ isOpen, entity, onClose, onSaved }: Props) {
   const [name, setName] = useState(entity?.name ?? '')
   const [typeVal, setTypeVal] = useState(entity?.type ?? '')
   const [description, setDescription] = useState(entity?.description ?? '')
+  const [price, setPrice] = useState(entity?.price != null ? String(entity.price) : '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -20,6 +21,7 @@ export default function EditPopup({ isOpen, entity, onClose, onSaved }: Props) {
     setName(entity?.name ?? '')
     setTypeVal(entity?.type ?? '')
     setDescription(entity?.description ?? '')
+    setPrice(entity?.price != null ? String(entity.price) : '')
   }, [entity])
 
   // ensure hooks are called even if closed
@@ -36,6 +38,7 @@ export default function EditPopup({ isOpen, entity, onClose, onSaved }: Props) {
       type: typeVal,
       name: name || undefined,
       description: description || undefined,
+      price: price !== '' ? Number(price) : undefined,
     }
     try {
       setLoading(true)
@@ -62,6 +65,16 @@ export default function EditPopup({ isOpen, entity, onClose, onSaved }: Props) {
           <div>
             <label className="block text-sm text-gray-300">Type *</label>
             <input value={typeVal} onChange={(e) => setTypeVal(e.target.value)} required className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-300">Price</label>
+            <input
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="0.00"
+              inputMode="decimal"
+              className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700"
+            />
           </div>
           <div>
             <label className="block text-sm text-gray-300">Description</label>
