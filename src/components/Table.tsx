@@ -2,6 +2,16 @@ import { useMemo, useState } from 'react'
 import { formatNumberBR } from '../utils/number'
 import type { Entity } from '../types/entity'
 
+export function formatPrice(p?: number | null) {
+  if (p === null || p === undefined) return '—'
+  if (typeof p === 'number' && Number.isFinite(p)) return formatNumberBR(p)
+  if (typeof p === 'string') {
+    const n = Number(p)
+    if (!Number.isNaN(n) && Number.isFinite(n)) return formatNumberBR(n)
+  }
+  return '—'
+}
+
 type Props = {
   entities: Entity[]
   onEdit: (e: Entity) => void
@@ -30,16 +40,6 @@ export default function Table({
   const [searchDesc, setSearchDesc] = useState('')
   const [pageSize, setPageSize] = useState(initialPageSize)
   const [page, setPage] = useState(0)
-
-  function formatPrice(p?: number | null) {
-    if (p === null || p === undefined) return '—'
-    if (typeof p === 'number' && Number.isFinite(p)) return formatNumberBR(p)
-    if (typeof p === 'string') {
-      const n = Number(p)
-      if (!Number.isNaN(n) && Number.isFinite(n)) return formatNumberBR(n)
-    }
-    return '—'
-  }
 
   const filtered = useMemo(() => {
     return entities.filter((e) => {

@@ -57,15 +57,15 @@ export default function AddPopup({ isOpen, onClose, onCreated }: Props) {
         {error && <div className="mb-2 p-2 bg-red-800 text-red-100 rounded">{error}</div>}
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
-            <label className="block text-sm text-gray-300">Name</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
+            <label htmlFor="name-input" className="block text-sm text-gray-300">Name</label>
+            <input id="name-input" value={name} onChange={(e) => setName(e.target.value)} className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
           </div>
           <div>
-            <label className="block text-sm text-gray-300">Type *</label>
-            <input value={typeVal} onChange={(e) => setTypeVal(e.target.value)} required className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
+            <label htmlFor="type-input" className="block text-sm text-gray-300">Type *</label>
+            <input id="type-input" value={typeVal} onChange={(e) => setTypeVal(e.target.value)} className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
           </div>
           <div>
-            <label className="block text-sm text-gray-300">Price</label>
+            <label htmlFor="price-input" className="block text-sm text-gray-300">Price</label>
             <input
               value={price}
               onChange={(e) => {
@@ -82,14 +82,15 @@ export default function AddPopup({ isOpen, onClose, onCreated }: Props) {
                 const parsed = parseBRInput(price)
                 setPrice(parsed !== undefined ? String(parsed).replace('.', ',') : '')
               }}
+              id="price-input"
               placeholder="0,00"
               inputMode="decimal"
               className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700"
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-300">Description</label>
-            <input value={description} onChange={(e) => setDescription(e.target.value)} className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
+            <label htmlFor="description-input" className="block text-sm text-gray-300">Description</label>
+            <input id="description-input" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full mt-1 px-2 py-1 rounded bg-gray-900 text-gray-100 border border-gray-700" />
           </div>
           <div className="flex justify-end gap-2">
             <button type="button" onClick={() => onClose()} className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">Cancel</button>
