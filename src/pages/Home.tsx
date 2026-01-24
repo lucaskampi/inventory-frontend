@@ -92,7 +92,11 @@ export default function Home() {
         {editingEntity && (
           <EditPopup isOpen={showEdit} entity={editingEntity} onClose={() => setShowEdit(false)} onSaved={handleSaved} />
         )}
-        {loading && <div className="flex justify-center py-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/30"></div></div>}
+        {loading && (
+          <div className="flex justify-center py-8" role="status" aria-label="home-loading">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/30" />
+          </div>
+        )}
       </main>
       <Footer />
     </div>
