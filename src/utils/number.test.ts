@@ -1,4 +1,4 @@
-import { test, expect } from 'vitest'
+import { test, expect, describe, it, } from 'vitest'
 import { formatNumberBR, parseBRInput } from './number'
 
 test('formatNumberBR handles undefined/null and numbers', () => {
@@ -22,8 +22,6 @@ test('parseBRInput covers comma, dot, integer and cleaned inputs', () => {
   expect(parseBRInput('1,2,3')).toBeUndefined()
   expect(parseBRInput('abc')).toBeUndefined()
 })
-import { describe, it, expect } from 'vitest'
-import { formatNumberBR, parseBRInput } from './number'
 
 describe('formatNumberBR', () => {
   it('formats numbers to pt-BR with two decimals', () => {
