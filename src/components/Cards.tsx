@@ -13,21 +13,55 @@ export default function Cards({ entities, lowStockThreshold = 5, currency = 'USD
   const [showModal, setShowModal] = useState(false)
 
   // Quantity field may be `quantity` or `stock` (optional)
-  const getQty = (e: any) => {
-    if (e.quantity !== undefined) return Number(e.quantity) || 0
-    if (e.stock !== undefined) return Number(e.stock) || 0
-    return 0
+  // Return `number | undefined` so we can treat missing differently from zero
+  const getQty = (e: any): number | undefined => {
+    if (e.quantity !== undefined) {
+      const n = Number(e.quantity)
+      return Number.isFinite(n) ? n : undefined
+    }
+    if (e.stock !== undefined) {
+      const n = Number(e.stock)
+      return Number.isFinite(n) ? n : undefined
+    }
+    return undefined
   }
 
-  // (previously computed counts per type — not needed now)
+  // Build counts per unique (type + name) and then aggregate per type.
+  const itemCounts = new Map<string, number>()
+  const itemMeta = new Map<string, { type: string; name: string }>()
 
-  // low-stock items (individual entities with qty <= threshold)
-  const lowItemsArr = entities
-    .map((e) => ({ id: (e as any).id, name: e.name ?? null, type: e.type ?? 'Unknown', qty: getQty(e) }))
+  entities.forEach((e) => {
+    const type = e.type ?? 'Unknown'
+    const name = e.name ?? ''
+    const key = `${type}||${name}`
+    const qtyVal = getQty(e)
+    const add = qtyVal ?? 1 // default to 1 only when quantity is absent
+    itemCounts.set(key, (itemCounts.get(key) ?? 0) + add)
+    if (!itemMeta.has(key)) itemMeta.set(key, { type, name })
+  })
+
+  const typeCounts: Record<string, number> = {}
+  for (const [key, qty] of itemCounts.entries()) {
+    const meta = itemMeta.get(key)!
+    typeCounts[meta.type] = (typeCounts[meta.type] ?? 0) + qty
+  }
+
+  const lowTypesArr = Object.keys(typeCounts)
+    .map((t) => ({ type: t, qty: typeCounts[t] }))
     .filter((x) => x.qty <= lowStockThreshold)
     .sort((a, b) => a.qty - b.qty)
 
-  const lowStockItems = lowItemsArr.length
+  // low-stock items: all unique (type+name) entries whose type is low
+  const lowTypeSet = new Set(lowTypesArr.map((x) => x.type))
+  const lowItemsArr = Array.from(itemCounts.entries())
+    .map(([key, qty]) => {
+      const meta = itemMeta.get(key)!
+      return { id: undefined as number | undefined, name: meta.name || null, type: meta.type, qty }
+    })
+    .filter((x) => lowTypeSet.has(x.type))
+    .sort((a, b) => a.type.localeCompare(b.type) || a.qty - b.qty)
+
+  const lowStockItems = lowTypesArr.length
 
   // inventory value: price * qty (if qty missing, assume 1)
   const totalValue = entities.reduce((acc, e) => {
@@ -57,24 +91,18 @@ export default function Cards({ entities, lowStockThreshold = 5, currency = 'USD
         <div className="bg-slate-800 rounded-lg p-4 shadow">
           <div className="flex justify-between items-start">
             <div>
-              <div className="text-sm text-gray-400">Low Stock Types (&le; {lowStockThreshold})</div>
+              <div className="text-sm text-gray-400">Low Stock Cars (&le; {lowStockThreshold})</div>
               <div className="text-2xl font-bold">{lowStockItems}</div>
             </div>
             <div className="text-sm text-gray-400 text-right">
               {lowStockItems === 0 ? (
                 <div className="text-gray-500">None</div>
               ) : (
-                <div className="text-right">
-                  <button id="view-all-low-small" onClick={() => setShowModal(true)} className="px-2 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded">View All ({lowStockItems})</button>
-                </div>
+                <button id="view-all-low" onClick={() => setShowModal(true)} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded">View All</button>
               )}
             </div>
           </div>
-          {lowStockItems > 3 && (
-            <div className="mt-3">
-              <button id="view-all-low" onClick={() => setShowModal(true)} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded">View All</button>
-            </div>
-          )}
+          {/* View All button now shown inline in header */}
         </div>
 
         <div className="bg-slate-800 rounded-lg p-4 shadow">
