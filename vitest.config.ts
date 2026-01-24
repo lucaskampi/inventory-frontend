@@ -8,8 +8,12 @@ export default defineConfig({
     globals: true,
     setupFiles: './src/setupTests.ts',
     coverage: {
-      provider: 'c8',
-      reporter: ['text', 'lcov'],
+      // Use the built-in V8 coverage provider to avoid optional external
+      // dependencies like `c8` which can cause resolve errors in some
+      // environments. Change to 'c8' if you specifically need it and have
+      // installed the package.
+      provider: 'v8',
+      reporter: ['text', 'lcov', 'html'],
     },
   },
 })
