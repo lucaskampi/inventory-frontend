@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import Cards from '../components/Cards'
 import Table from '../components/Table'
 import AddPopup from '../components/AddPopup'
+import EditPopup from '../components/EditPopup'
 
 export default function Home() {
   const [entities, setEntities] = useState<Entity[]>([])
@@ -42,6 +43,8 @@ export default function Home() {
   }
 
   const [showAdd, setShowAdd] = useState(false)
+  const [showEdit, setShowEdit] = useState(false)
+  const [editingEntity, setEditingEntity] = useState<Entity | null>(null)
 
   async function handleCreateSuccess(e: Entity) {
     // insert at top
@@ -49,8 +52,20 @@ export default function Home() {
   }
 
   function handleEdit(entity: Entity) {
-    // open edit modal — to be implemented
-    console.log('edit', entity)
+    setEditingEntity(entity)
+    setShowEdit(true)
+  }
+
+  function handleSaved(entity: Entity) {
+    setEntities((s) => {
+      const idx = s.findIndex((x) => x.id === entity.id)
+      if (idx === -1) return [entity, ...s]
+      const copy = [...s]
+      copy[idx] = entity
+      return copy
+    })
+    setEditingEntity(null)
+    setShowEdit(false)
   }
 
   // Table behavior moved to `Table` component.
@@ -72,6 +87,9 @@ export default function Home() {
           />
         </div>
         <AddPopup isOpen={showAdd} onClose={() => setShowAdd(false)} onCreated={handleCreateSuccess} />
+        {editingEntity && (
+          <EditPopup isOpen={showEdit} entity={editingEntity} onClose={() => setShowEdit(false)} onSaved={handleSaved} />
+        )}
         {loading && <div className="flex justify-center py-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/30"></div></div>}
       </main>
       <Footer />
