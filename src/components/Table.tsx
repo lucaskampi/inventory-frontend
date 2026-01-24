@@ -51,14 +51,6 @@ export default function Table({
     <div className="text-gray-200">
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-lg font-semibold">Entities</h3>
-        <div className="flex gap-2">
-          <button title="Toggle view" className="text-gray-400 hover:text-gray-200 bg-transparent p-2 rounded">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/></svg>
-          </button>
-          <button title="Refresh" onClick={() => onRefresh && onRefresh()} disabled={loading} className="text-gray-400 hover:text-gray-200 bg-transparent p-2 rounded disabled:opacity-50">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 12a8 8 0 10-2.5 5.5L20 20"/><path d="M20 4v6h-6"/></svg>
-          </button>
-        </div>
       </div>
 
       {error && (
