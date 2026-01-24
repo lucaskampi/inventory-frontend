@@ -9,6 +9,7 @@ import Table from '../components/Table'
 export default function Home() {
   const [entities, setEntities] = useState<Entity[]>([])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchEntities()
@@ -16,11 +17,13 @@ export default function Home() {
 
   async function fetchEntities() {
     setLoading(true)
+    setError(null)
     try {
       const data = await listEntities()
       setEntities(data)
     } catch (err) {
       console.error(err)
+      setError((err as Error)?.message || 'Failed to load entities')
     } finally {
       setLoading(false)
     }
@@ -33,6 +36,7 @@ export default function Home() {
       setEntities((s) => s.filter((e) => e.id !== id))
     } catch (err) {
       console.error(err)
+      setError((err as Error)?.message || 'Failed to delete entity')
     }
   }
 
@@ -54,6 +58,8 @@ export default function Home() {
             onEdit={handleEdit}
             onDelete={handleDelete}
             onRefresh={fetchEntities}
+            loading={loading}
+            error={error}
             onAdd={() => alert('Add')}
           />
         </div>
