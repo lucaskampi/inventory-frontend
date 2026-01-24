@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run unit tests (Vitest)
+        run: npm test --silent
+
+      - name: Build app
+        run: npm run build --silent
+
+      - name: Start preview server
+        run: npm run preview --silent &
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:5173
+
+      - name: Run Cypress tests (headless)
+        run: npx cypress run --spec "cypress/e2e/**/*.cy.ts"

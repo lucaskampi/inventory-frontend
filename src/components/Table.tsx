@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import type { Entity } from '../types/entities'
+import type { Entity } from '../types/entity'
 
 type Props = {
   entities: Entity[]
@@ -9,6 +9,8 @@ type Props = {
   onAdd?: () => void
   pageSizes?: number[]
   initialPageSize?: number
+  loading?: boolean
+  error?: string | null
 }
 
 export default function Table({
@@ -19,6 +21,8 @@ export default function Table({
   onAdd,
   pageSizes = [5, 10, 25],
   initialPageSize = 10,
+  loading = false,
+  error = null,
 }: Props) {
   const [searchName, setSearchName] = useState('')
   const [searchType, setSearchType] = useState('')
@@ -51,11 +55,15 @@ export default function Table({
           <button title="Toggle view" className="text-gray-400 hover:text-gray-200 bg-transparent p-2 rounded">
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/></svg>
           </button>
-          <button title="Refresh" onClick={() => onRefresh && onRefresh()} className="text-gray-400 hover:text-gray-200 bg-transparent p-2 rounded">
+          <button title="Refresh" onClick={() => onRefresh && onRefresh()} disabled={loading} className="text-gray-400 hover:text-gray-200 bg-transparent p-2 rounded disabled:opacity-50">
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 12a8 8 0 10-2.5 5.5L20 20"/><path d="M20 4v6h-6"/></svg>
           </button>
         </div>
       </div>
+
+      {error && (
+        <div className="mb-3 p-3 bg-red-800 text-red-100 rounded">{error}</div>
+      )}
 
       <div className="bg-gray-800 rounded-lg p-3 shadow-sm">
         <table className="min-w-full table-fixed">
@@ -110,7 +118,14 @@ export default function Table({
             {pageItems.length === 0 ? (
               <tr>
                 <td colSpan={4} className="p-6 text-gray-400">
-                  No entities found
+                  {loading ? (
+                    <div className="flex items-center gap-2 justify-center">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white/30"></div>
+                      Loading...
+                    </div>
+                  ) : (
+                    'No entities found'
+                  )}
                 </td>
               </tr>
             ) : (
@@ -120,10 +135,10 @@ export default function Table({
                   <td className="p-3">{e.type}</td>
                   <td className="p-3">{e.description || '—'}</td>
                   <td className="p-3 text-right">
-                    <button onClick={() => onEdit(e)} title="Edit" className="text-blue-400 hover:text-blue-300 p-1 mr-2">
+                    <button onClick={() => onEdit(e)} title="Edit" disabled={loading} className="text-blue-400 hover:text-blue-300 p-1 mr-2 disabled:opacity-50">
                       <svg className="w-4 h-4 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 21v-3a4 4 0 014-4h9"/><path d="M16.5 6.5 19.5 9.5 8 21H5v-3L16.5 6.5z"/></svg>
                     </button>
-                    <button onClick={() => onDelete(e.id)} title="Delete" className="text-red-400 hover:text-red-300 p-1">
+                    <button onClick={() => onDelete(e.id)} title="Delete" disabled={loading} className="text-red-400 hover:text-red-300 p-1 disabled:opacity-50">
                       <svg className="w-4 h-4 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                     </button>
                   </td>
@@ -150,7 +165,7 @@ export default function Table({
             ))}
           </select>
 
-          <div className="text-gray-400">{filtered.length} of {filtered.length}</div>
+          <div className="text-gray-400">Showing {filtered.length} of {entities.length}</div>
 
           <div className="flex gap-2">
             <button onClick={() => gotoPage(0)} disabled={page === 0} className="text-gray-400 disabled:opacity-50">|&lt;</button>
