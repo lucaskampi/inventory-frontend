@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useMemo } from 'react'
-import type { Entity } from '../types/entities'
-import { listEntities, deleteEntity } from '../api/entities'
+import { useEffect, useState } from 'react'
+import type { Entity } from '../types/entity'
+import { listEntities, deleteEntity} from '../api/entities'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Cards from '../components/Cards'
 import Table from '../components/Table'
+import AddPopup from '../components/AddPopup'
 
 export default function Home() {
   const [entities, setEntities] = useState<Entity[]>([])
@@ -40,6 +41,13 @@ export default function Home() {
     }
   }
 
+  const [showAdd, setShowAdd] = useState(false)
+
+  async function handleCreateSuccess(e: Entity) {
+    // insert at top
+    setEntities((s) => [e, ...s])
+  }
+
   function handleEdit(entity: Entity) {
     // open edit modal — to be implemented
     console.log('edit', entity)
@@ -60,9 +68,10 @@ export default function Home() {
             onRefresh={fetchEntities}
             loading={loading}
             error={error}
-            onAdd={() => alert('Add')}
+            onAdd={() => setShowAdd(true)}
           />
         </div>
+        <AddPopup isOpen={showAdd} onClose={() => setShowAdd(false)} onCreated={handleCreateSuccess} />
         {loading && <div className="flex justify-center py-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/30"></div></div>}
       </main>
       <Footer />
