@@ -3,6 +3,7 @@ export interface Entity {
 	type: string
 	name?: string | null
 	description?: string | null
+	price?: number | null
 	created_at: string
 }
 

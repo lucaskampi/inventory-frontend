@@ -30,6 +30,16 @@ export default function Table({
   const [pageSize, setPageSize] = useState(initialPageSize)
   const [page, setPage] = useState(0)
 
+  function formatPrice(p?: number | null) {
+    if (p === null || p === undefined) return '—'
+    if (typeof p === 'number' && Number.isFinite(p)) return p.toFixed(2)
+    if (typeof p === 'string') {
+      const n = Number(p)
+      if (!Number.isNaN(n) && Number.isFinite(n)) return n.toFixed(2)
+    }
+    return '—'
+  }
+
   const filtered = useMemo(() => {
     return entities.filter((e) => {
       if (searchName && !(e.name || '').toLowerCase().includes(searchName.toLowerCase())) return false
@@ -61,7 +71,7 @@ export default function Table({
         <table className="min-w-full table-fixed">
           <thead>
             <tr className="border-b border-gray-700">
-              <th className="text-left p-3 w-1/3">
+              <th className="text-left p-3 w-1/4">
                 <div className="flex items-center gap-2">
                   <span className="text-gray-400">Name</span>
                   <input
@@ -75,7 +85,7 @@ export default function Table({
                   />
                 </div>
               </th>
-              <th className="text-left p-3 w-1/5">
+              <th className="text-left p-3 w-1/6">
                 <div className="flex items-center gap-2">
                   <span className="text-gray-400">Type</span>
                   <input
@@ -103,13 +113,14 @@ export default function Table({
                   />
                 </div>
               </th>
+              <th className="text-right p-3 w-32">Price</th>
               <th className="text-right p-3 w-40">Actions</th>
             </tr>
           </thead>
           <tbody>
             {pageItems.length === 0 ? (
               <tr>
-                <td colSpan={4} className="p-6 text-gray-400">
+                <td colSpan={5} className="p-6 text-gray-400">
                   {loading ? (
                     <div className="flex items-center gap-2 justify-center">
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white/30"></div>
@@ -126,6 +137,7 @@ export default function Table({
                   <td className="p-3">{e.name || '—'}</td>
                   <td className="p-3">{e.type}</td>
                   <td className="p-3">{e.description || '—'}</td>
+                  <td className="p-3 text-right">{formatPrice(e.price)}</td>
                   <td className="p-3 text-right">
                     <button onClick={() => onEdit(e)} title="Edit" disabled={loading} className="text-blue-400 hover:text-blue-300 p-1 mr-2 disabled:opacity-50">
                       <svg className="w-4 h-4 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 21v-3a4 4 0 014-4h9"/><path d="M16.5 6.5 19.5 9.5 8 21H5v-3L16.5 6.5z"/></svg>
