@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { Entity } from '../types/entity'
 
 type Props = {
@@ -61,6 +61,16 @@ export default function Table({
     <div className="text-gray-200">
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-lg font-semibold">Entities</h3>
+        <div>
+          <button
+            title="Refresh"
+            onClick={() => onRefresh && onRefresh()}
+            disabled={loading}
+            className="text-gray-400 hover:text-gray-200 mr-2 px-2 py-1 rounded bg-gray-900 disabled:opacity-50"
+          >
+            ⟳
+          </button>
+        </div>
       </div>
 
       {error && (

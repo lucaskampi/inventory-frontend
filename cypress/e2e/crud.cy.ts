@@ -1,9 +1,9 @@
 describe('CRUD flows (mocked)', () => {
   beforeEach(() => {
-    // initial list
-    cy.intercept('GET', '/entities', { fixture: 'entities.json' }).as('getEntities')
+    // initial list - match any host/path that ends with /entities
+    cy.intercept('GET', '**/entities', { fixture: 'entities.json' }).as('getEntities')
     // delete stub
-    cy.intercept('DELETE', '/entities/*', { statusCode: 200 }).as('deleteEntity')
+    cy.intercept('DELETE', '**/entities/*', { statusCode: 200 }).as('deleteEntity')
   })
 
   it('lists entities and deletes one item', () => {
