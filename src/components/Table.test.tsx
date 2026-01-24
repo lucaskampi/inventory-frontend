@@ -1,5 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
+import { test, expect, vi } from 'vitest'
 import Table from './Table'
 import type { Entity } from '../types/entity'
 
