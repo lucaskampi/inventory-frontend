@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { Entity } from '../types/entity'
 
 type Props = {
@@ -17,7 +17,6 @@ export default function Table({
   entities,
   onEdit,
   onDelete,
-  onRefresh,
   onAdd,
   pageSizes = [5, 10, 25],
   initialPageSize = 10,
