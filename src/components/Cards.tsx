@@ -84,14 +84,14 @@ export default function Cards({ entities, lowStockThreshold = 5, currency = 'USD
     <>
     <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div className="bg-slate-800 rounded-lg p-4 shadow">
-          <div className="text-sm text-gray-400">Total Entities</div>
+          <div className="text-sm text-gray-400">Total Cars</div>
           <div className="text-2xl font-bold">{total}</div>
         </div>
 
         <div className="bg-slate-800 rounded-lg p-4 shadow">
           <div className="flex justify-between items-start">
             <div>
-              <div className="text-sm text-gray-400">Low Stock Entities (&le; {lowStockThreshold})</div>
+              <div className="text-sm text-gray-400">Low Stock Cars (&le; {lowStockThreshold})</div>
               <div className="text-2xl font-bold">{lowStockItems}</div>
             </div>
             <div className="text-sm text-gray-400 text-right">
