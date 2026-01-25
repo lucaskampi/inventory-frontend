@@ -23,10 +23,10 @@ beforeEach(() => {
   vi.clearAllMocks()
 })
 
-test('initial fetch and renders Entities header', async () => {
+test('initial fetch and renders Cars header', async () => {
   ;(listEntities as any).mockResolvedValueOnce([])
   render(<Home />)
-  expect(await screen.findByText('Entities')).toBeInTheDocument()
+  expect(await screen.findByText('Cars')).toBeInTheDocument()
   expect(listEntities).toHaveBeenCalledTimes(1)
 })
 
