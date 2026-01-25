@@ -91,7 +91,7 @@ export default function Cards({ entities, lowStockThreshold = 5, currency = 'USD
         <div className="bg-slate-800 rounded-lg p-4 shadow">
           <div className="flex justify-between items-start">
             <div>
-              <div className="text-sm text-gray-400">Low Stock Cars (&le; {lowStockThreshold})</div>
+              <div className="text-sm text-gray-400">Low Stock Entities (&le; {lowStockThreshold})</div>
               <div className="text-2xl font-bold">{lowStockItems}</div>
             </div>
             <div className="text-sm text-gray-400 text-right">
