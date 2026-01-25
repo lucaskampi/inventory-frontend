@@ -1,7 +1,9 @@
 import axios from 'axios'
 import type { AxiosInstance, AxiosError } from 'axios'
 
-const BASE_URL = (import.meta.env.VITE_API_BASE as string) || 'http://localhost:8000/api'
+// In dev we proxy `/api` to the backend via Vite (see vite.config.ts).
+// Allow overriding with `VITE_API_BASE` for production builds.
+const BASE_URL = (import.meta.env.VITE_API_BASE as string) || '/api'
 
 const api: AxiosInstance = axios.create({
   baseURL: BASE_URL,

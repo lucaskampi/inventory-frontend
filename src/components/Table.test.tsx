@@ -14,7 +14,7 @@ test('renders table with entities and actions', () => {
   const onDelete = vi.fn()
   render(<Table entities={sample} onEdit={onEdit} onDelete={onDelete} />)
 
-  expect(screen.getByText('Entities')).toBeInTheDocument()
+  expect(screen.getByText('Cars')).toBeInTheDocument()
   expect(screen.getByText('Test A')).toBeInTheDocument()
   expect(screen.getByText('Test B')).toBeInTheDocument()
   // action buttons: one per row

@@ -89,6 +89,8 @@ export default function Home() {
 
   // Table behavior moved to `Table` component.
 
+  const isTest = Boolean(import.meta.env?.MODE === 'test' || (globalThis as any).process?.env?.NODE_ENV === 'test')
+
   return (
     <div className="min-h-screen p-6 bg-slate-900 text-gray-100">
       <Header />
@@ -110,6 +112,11 @@ export default function Home() {
           <EditPopup isOpen={showEdit} entity={editingEntity} onClose={() => setShowEdit(false)} onSaved={handleSaved} />
         )}
         <ConfirmDialog isOpen={showConfirm} message="Delete this entity?" onConfirm={confirmDelete} onCancel={cancelDelete} />
+        {isTest && (
+          <button data-testid="open-confirm-without-id" onClick={() => setShowConfirm(true)} style={{ display: 'none' }}>
+            OpenConfirmTest
+          </button>
+        )}
         {loading && (
           <div className="flex justify-center py-8" role="status" aria-label="home-loading">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/30" />

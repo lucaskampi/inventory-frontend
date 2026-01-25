@@ -18,9 +18,6 @@ export default function EditPopup({ isOpen, entity, onClose, onSaved }: Props) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // ensure hooks are called even if closed
-  if (!isOpen) return null
-
   useEffect(() => {
     setName(entity?.name ?? '')
     setTypeVal(entity?.type ?? '')
@@ -28,8 +25,6 @@ export default function EditPopup({ isOpen, entity, onClose, onSaved }: Props) {
     setPrice(entity?.price != null ? formatNumberBR(entity.price) : '')
   }, [entity])
 
-  // ensure hooks are called even if closed
-  if (!isOpen) return null
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -56,6 +51,8 @@ export default function EditPopup({ isOpen, entity, onClose, onSaved }: Props) {
       setLoading(false)
     }
   }
+
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">

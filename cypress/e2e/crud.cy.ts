@@ -14,11 +14,12 @@ describe('CRUD flows (mocked)', () => {
     cy.contains('Test A')
     cy.contains('Test B')
 
-    // auto-confirm JS confirm dialog
-    cy.on('window:confirm', () => true)
-
-    // click first delete button
-    cy.get('[title="Delete"]').first().click()
+    // click delete button for the row containing 'Test A' to ensure correct target
+    cy.contains('Test A').closest('tr').find('[title="Delete"]').click()
+    // confirm dialog should appear; click the Confirm button inside it
+    cy.get('[data-testid="confirm-dialog"]').should('be.visible')
+    // click the confirm button by test id to avoid ambiguous queries in headless
+    cy.get('[data-testid="confirm-confirm"]').should('be.visible').click({ force: true })
     cy.wait('@deleteEntity')
 
     // after deletion the UI removes the item (Home updates state)

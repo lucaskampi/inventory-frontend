@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, within, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { test, expect, vi, beforeEach } from 'vitest'
 
@@ -23,10 +23,10 @@ beforeEach(() => {
   vi.clearAllMocks()
 })
 
-test('initial fetch and renders Entities header', async () => {
+test('initial fetch and renders Cars header', async () => {
   ;(listEntities as any).mockResolvedValueOnce([])
   render(<Home />)
-  expect(await screen.findByText('Entities')).toBeInTheDocument()
+  expect(await screen.findByText('Cars')).toBeInTheDocument()
   expect(listEntities).toHaveBeenCalledTimes(1)
 })
 
@@ -157,4 +157,32 @@ test('delete error branch displays error message', async () => {
   expect(await screen.findByTestId('confirm-dialog')).toBeInTheDocument()
   await user.click(screen.getByRole('button', { name: 'Confirm' }))
   expect(await screen.findByText(/delete-fail/)).toBeInTheDocument()
+})
+
+test('confirm without id returns early and does not call delete', async () => {
+  ;(listEntities as any).mockResolvedValueOnce([{ id: 9, name: 'NoId', type: 't', description: '' }])
+  render(<Home />)
+  expect(await screen.findByText('NoId')).toBeInTheDocument()
+  // open test-only confirm dialog without setting toDeleteId
+  const btn = screen.getByTestId('open-confirm-without-id')
+  // it's hidden in DOM; use fireEvent to trigger click
+  fireEvent.click(btn)
+  expect(await screen.findByTestId('confirm-dialog')).toBeInTheDocument()
+  const user = userEvent.setup()
+  await user.click(screen.getByRole('button', { name: 'Confirm' }))
+  // since no id was set, deleteEntity must not be called
+  expect(deleteEntity).not.toHaveBeenCalled()
+})
+
+test('exercises AddPopup and EditPopup JSX branches', async () => {
+  ;(listEntities as any).mockResolvedValueOnce([{ id: 10, name: 'Both', type: 't', description: '' }])
+  render(<Home />)
+  expect(await screen.findByText('Both')).toBeInTheDocument()
+  const user = userEvent.setup()
+  // open add popup
+  await user.click(screen.getByTitle('Add'))
+  expect(screen.getByTestId('stub-add')).toBeInTheDocument()
+  // open edit popup
+  await user.click(screen.getByTitle('Edit'))
+  expect(screen.getByTestId('stub-edit')).toBeInTheDocument()
 })

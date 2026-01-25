@@ -1,5 +1,3 @@
-import React from 'react'
-
 type Props = {
   isOpen: boolean
   title?: string
@@ -19,8 +17,8 @@ export default function ConfirmDialog({ isOpen, title = 'Confirm', message, conf
         <h3 className="text-lg font-semibold mb-2">{title}</h3>
         <div className="mb-4 text-gray-200">{message}</div>
         <div className="flex justify-end gap-2">
-          <button onClick={onCancel} className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">{cancelLabel}</button>
-          <button onClick={onConfirm} className="px-3 py-1 rounded bg-red-600 hover:bg-red-500">{confirmLabel}</button>
+          <button data-testid="confirm-cancel" onClick={onCancel} className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">{cancelLabel}</button>
+          <button data-testid="confirm-confirm" onClick={onConfirm} className="px-3 py-1 rounded bg-red-600 hover:bg-red-500">{confirmLabel}</button>
         </div>
       </div>
     </div>
