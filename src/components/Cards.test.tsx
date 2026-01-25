@@ -6,13 +6,13 @@ import Cards from './Cards'
 test('renders empty cards state', () => {
   render(<Cards entities={[]} />)
 
-  // Total Entities card shows 0
-  const totalLabel = screen.getByText(/Total Entities/i)
+  // Total Cars card shows 0
+  const totalLabel = screen.getByText(/Total Cars/i)
   const totalCard = totalLabel.closest('div.bg-slate-800') || totalLabel.parentElement!
   expect(within(totalCard).getByText('0')).toBeInTheDocument()
 
   // Low stock shows None and count 0
-  const lowLabel = screen.getByText(/Low Stock Entities/i)
+  const lowLabel = screen.getByText(/Low Stock Cars/i)
   const lowCard = lowLabel.closest('div.bg-slate-800') || lowLabel.parentElement!.parentElement!.parentElement!
   expect(within(lowCard).getByText('0')).toBeInTheDocument()
   expect(within(lowCard).getByText(/None/i) || screen.getByText(/None/i)).toBeTruthy()
@@ -29,13 +29,13 @@ test('calculates totals, low stock and opens ViewAll modal', async () => {
 
   render(<Cards entities={entities} lowStockThreshold={5} currency="USD" />)
 
-  // Total Entities should show 3
-  const totalLabel = screen.getByText(/Total Entities/i)
+  // Total Cars should show 3
+  const totalLabel = screen.getByText(/Total Cars/i)
   const totalCard = totalLabel.closest('div.bg-slate-800') || totalLabel.parentElement!
   expect(within(totalCard).getByText('3')).toBeInTheDocument()
 
   // Low stock types count
-  const lowLabel = screen.getByText(/Low Stock Entities/i)
+  const lowLabel = screen.getByText(/Low Stock Cars/i)
   const lowCard = lowLabel.closest('div.bg-slate-800') || lowLabel.parentElement!.parentElement!.parentElement!
   expect(within(lowCard).getByText('2')).toBeInTheDocument()
 
