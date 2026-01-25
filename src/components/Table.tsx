@@ -61,7 +61,7 @@ export default function Table({
   return (
     <div className="text-gray-200">
       <div className="flex justify-between items-center mb-3">
-        <h3 className="text-lg font-semibold">Cars</h3>
+          <h3 className="text-lg font-semibold">Cars</h3>
         <div className="flex items-center">
           {onAdd && (
             <button
