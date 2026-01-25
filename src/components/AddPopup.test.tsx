@@ -50,6 +50,27 @@ describe('AddPopup', () => {
     expect(onClose).toHaveBeenCalled()
   })
 
+  it('includes name and description in payload when provided', async () => {
+    const onClose = vi.fn()
+    const onCreated = vi.fn()
+    const mockCreate = (createEntity as unknown as vi.Mock).mockResolvedValueOnce({ id: 30, type: 'widget', name: 'Filled', description: 'Desc' })
+
+    render(<AddPopup isOpen={true} onClose={onClose} onCreated={onCreated} />)
+    const user = userEvent.setup()
+
+    await user.type(screen.getByLabelText(/Type/i), 'widget')
+    await user.type(screen.getByLabelText(/Name/i), 'Filled')
+    await user.type(screen.getByLabelText(/Description/i), 'Desc')
+    await user.click(screen.getByText('Save'))
+
+    await waitFor(() => expect(mockCreate).toHaveBeenCalled())
+    const payload = mockCreate.mock.calls[0][0]
+    expect(payload).toHaveProperty('name', 'Filled')
+    expect(payload).toHaveProperty('description', 'Desc')
+    expect(onCreated).toHaveBeenCalled()
+    expect(onClose).toHaveBeenCalled()
+  })
+
   it('formats price on focus and blur', async () => {
     const onClose = vi.fn()
     const onCreated = vi.fn()
